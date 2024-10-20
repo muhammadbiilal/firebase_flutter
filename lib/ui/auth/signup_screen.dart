@@ -20,7 +20,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   void dispose() {
@@ -140,7 +140,7 @@ class _SignupScreenState extends State<SignupScreen> {
               children: [
                 const Text(
                   'Already have an account?',
-                  style: TextStyle(color: Colors.deepPurple),
+                  // style: TextStyle(color: Colors.deepPurple),
                 ),
                 // const SizedBox(width: 10),
                 TextButton(

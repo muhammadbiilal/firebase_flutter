@@ -1,7 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebaseflutter/ui/auth/signup_screen.dart';
+import 'package:firebaseflutter/ui/posts/post_screen.dart';
+import 'package:firebaseflutter/utils/utils.dart';
 import 'package:firebaseflutter/widgets/round_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -14,6 +18,35 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  bool loading = false;
+
+  final _auth = FirebaseAuth.instance;
+
+  void login() {
+    setState(() {
+      loading = true;
+    });
+    _auth
+        .signInWithEmailAndPassword(
+            email: emailController.text, password: passwordController.text)
+        .then((result) {
+      Utils().toastMessgae(result.user!.email.toString());
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => PostScreen()));
+      Fluttertoast.showToast(
+        msg: 'User login successfully: ${result.toString()}',
+        backgroundColor: Colors.green,
+      );
+      setState(() {
+        loading = false;
+      });
+    }).onError((error, stackTrace) {
+      Utils().toastMessgae(error.toString());
+      setState(() {
+        loading = false;
+      });
+    });
+  }
 
   @override
   void dispose() {
@@ -86,8 +119,10 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 50),
               RoundButton(
                 title: 'Login',
+                loading: loading,
                 onTap: () {
                   if (_formKey.currentState!.validate()) {}
+                  login();
                 },
               ),
               const SizedBox(height: 10),
@@ -97,7 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   const Text(
                     'Don\'t have an account?',
-                    style: TextStyle(color: Colors.deepPurple),
+                    // style: TextStyle(color: Colors.deepPurple),
                   ),
                   // const SizedBox(width: 10),
                   TextButton(
