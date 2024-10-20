@@ -36,6 +36,9 @@ class _PostScreenState extends State<PostScreen> {
           ),
         ],
       ),
+      body: Center(
+        child: Text('Post Screen'),
+      ),
     );
   }
 }
