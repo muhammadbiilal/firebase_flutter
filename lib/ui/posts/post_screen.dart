@@ -2,6 +2,7 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebaseflutter/ui/auth/login_screen.dart';
+import 'package:firebaseflutter/ui/posts/add_posts.dart';
 import 'package:firebaseflutter/utils/utils.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +19,7 @@ class _PostScreenState extends State<PostScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: true,
         title: const Text('Post Screen'),
         actions: [
           IconButton(
@@ -39,6 +40,17 @@ class _PostScreenState extends State<PostScreen> {
       ),
       body: const Center(
         child: Text('Post Screen'),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const AddPostScreen()));
+        },
+        backgroundColor: Colors.deepPurple,
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
       ),
     );
   }
