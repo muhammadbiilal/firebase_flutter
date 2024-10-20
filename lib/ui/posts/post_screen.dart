@@ -1,5 +1,6 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebaseflutter/firebase_services/auth_service.dart';
 import 'package:firebaseflutter/ui/auth/login_screen.dart';
 import 'package:firebaseflutter/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +37,7 @@ class _PostScreenState extends State<PostScreen> {
           ),
         ],
       ),
-      body: Center(
+      body: const Center(
         child: Text('Post Screen'),
       ),
     );
