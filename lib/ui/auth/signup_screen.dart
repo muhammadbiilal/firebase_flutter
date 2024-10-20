@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print, use_build_context_synchronously
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebaseflutter/firebase_services/auth_service.dart';
 import 'package:firebaseflutter/ui/auth/login_screen.dart';
 import 'package:firebaseflutter/utils/utils.dart';
 import 'package:firebaseflutter/widgets/round_button.dart';
@@ -129,8 +130,19 @@ class _SignupScreenState extends State<SignupScreen> {
             RoundButton(
               title: 'Sign Up',
               loading: loading,
-              onTap: () {
-                signUp();
+              onTap: () async {
+                // signUp();
+                setState(() {
+                  loading = true;
+                });
+                await AuthService().signup(
+                    email: emailController.text,
+                    password: passwordController.text,
+                    context: context);
+
+                setState(() {
+                  loading = false;
+                });
               },
             ),
             const SizedBox(height: 10),

@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebaseflutter/firebase_services/auth_service.dart';
 import 'package:firebaseflutter/ui/auth/signup_screen.dart';
 import 'package:firebaseflutter/ui/posts/post_screen.dart';
 import 'package:firebaseflutter/utils/utils.dart';
@@ -120,9 +121,20 @@ class _LoginScreenState extends State<LoginScreen> {
               RoundButton(
                 title: 'Login',
                 loading: loading,
-                onTap: () {
-                  if (_formKey.currentState!.validate()) {}
-                  login();
+                onTap: () async {
+                  if (_formKey.currentState!.validate()) {
+                    // login();
+                    setState(() {
+                      loading = true;
+                    });
+                    await AuthService().signin(
+                        email: emailController.text,
+                        password: passwordController.text,
+                        context: context);
+                    setState(() {
+                      loading = false;
+                    });
+                  }
                 },
               ),
               const SizedBox(height: 10),
