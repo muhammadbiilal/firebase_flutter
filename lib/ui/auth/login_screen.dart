@@ -62,13 +62,13 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      // onPopInvoked: (bool didPop) async {
-      //   SystemNavigator.pop();
-      //   // return didPop;
-      // },
-      onPopInvokedWithResult: (didPop, dynamic) {
+      onPopInvoked: (bool didPop) async {
         SystemNavigator.pop();
+        // return didPop;
       },
+      // onPopInvokedWithResult: (didPop, dynamic) {
+      //   SystemNavigator.pop();
+      // },
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
