@@ -1,28 +1,28 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:firebase_database/firebase_database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebaseflutter/utils/utils.dart';
 import 'package:firebaseflutter/widgets/round_button.dart';
 import 'package:flutter/material.dart';
 
-class AddPostScreen extends StatefulWidget {
-  const AddPostScreen({super.key});
+class FireStoreAddPostScreen extends StatefulWidget {
+  const FireStoreAddPostScreen({super.key});
 
   @override
-  State<AddPostScreen> createState() => _AddPostScreenState();
+  State<FireStoreAddPostScreen> createState() => _FireStoreAddPostScreenState();
 }
 
-class _AddPostScreenState extends State<AddPostScreen> {
+class _FireStoreAddPostScreenState extends State<FireStoreAddPostScreen> {
   bool loading = false;
   final postController = TextEditingController();
-  final databaseRef = FirebaseDatabase.instance.ref('Post');
+  final fireStore = FirebaseFirestore.instance.collection('users');
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
-        title: const Text('Add Post Screen'),
+        title: const Text('Firestore Add Post Screen'),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -46,20 +46,19 @@ class _AddPostScreenState extends State<AddPostScreen> {
                   loading = true;
                 });
                 String id = DateTime.now().millisecondsSinceEpoch.toString();
-                databaseRef.child(id).set({
+                fireStore.doc(id).set({
                   'title': postController.text.toString(),
                   'id': id,
-                }).then((result) {
-                  Utils().toastMessgae('Post added successfully');
+                }).then((value) {
                   postController.clear();
                   setState(() {
                     loading = false;
                   });
                 }).onError((error, stackTrace) {
-                  Utils().toastMessgae(error.toString());
                   setState(() {
                     loading = false;
                   });
+                  Utils().toastMessgae(error.toString());
                 });
               },
             )

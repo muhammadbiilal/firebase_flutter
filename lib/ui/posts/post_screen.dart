@@ -19,6 +19,7 @@ class _PostScreenState extends State<PostScreen> {
   final auth = FirebaseAuth.instance;
   final ref = FirebaseDatabase.instance.ref('Post');
   final searchFilter = TextEditingController();
+  final editController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -66,22 +67,51 @@ class _PostScreenState extends State<PostScreen> {
               defaultChild: const Text('Loading...'),
               itemBuilder: (context, snapshot, animation, index) {
                 final title = snapshot.child('title').value.toString();
-                if(searchFilter.text.isEmpty){
+                if (searchFilter.text.isEmpty) {
                   return ListTile(
-                  title: Text(snapshot.child('title').value.toString()),
-                  subtitle: Text(snapshot.child('id').value.toString()),
-                );
-                }
-                else if (title.toLowerCase().contains(searchFilter.text.toLowerCase())){
+                    title: Text(snapshot.child('title').value.toString()),
+                    subtitle: Text(snapshot.child('id').value.toString()),
+                    trailing: PopupMenuButton(
+                      icon: const Icon(Icons.more_vert),
+                      itemBuilder: (context) => [
+                        PopupMenuItem(
+                          value: 1,
+                          onTap: () {
+                            // Navigator.pop(context);
+                            showUpdateDialog(
+                                title, snapshot.child('id').value.toString());
+                          },
+                          child: const ListTile(
+                            leading: Icon(Icons.edit),
+                            title: Text('Edit'),
+                          ),
+                        ),
+                        PopupMenuItem(
+                          value: 1,
+                          onTap: () {
+                            // Navigator.pop(context);
+                            // showUpdateDialog(snapshot.child('title').value.toString());
+                            showDeleteDialog(
+                                snapshot.child('id').value.toString());
+                          },
+                          child: const ListTile(
+                            leading: Icon(Icons.delete_outline),
+                            title: Text('Delete'),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                } else if (title
+                    .toLowerCase()
+                    .contains(searchFilter.text.toLowerCase())) {
                   return ListTile(
-                  title: Text(snapshot.child('title').value.toString()),
-                  subtitle: Text(snapshot.child('id').value.toString()),
-                );
-                }
-                else{
+                    title: Text(snapshot.child('title').value.toString()),
+                    subtitle: Text(snapshot.child('id').value.toString()),
+                  );
+                } else {
                   return Container();
                 }
-                
               },
             ),
           ),
@@ -132,4 +162,75 @@ class _PostScreenState extends State<PostScreen> {
       ),
     );
   }
+
+  Future<void> showUpdateDialog(String title, String id) async {
+    editController.text = title;
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Update'),
+            content: TextField(
+              controller: editController,
+              decoration: const InputDecoration(
+                hintText: 'Edit',
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  ref.child(id).update(
+                    {'title': editController.text.toLowerCase()},
+                  ).then((value) {
+                    Utils().toastMessgae('Post updated successfully!');
+                    Navigator.pop(context);
+                  }).onError((error, stackTrace) {
+                    Utils().toastMessgae(error.toString());
+                    Navigator.pop(context);
+                  });
+                },
+                child: const Text('Update'),
+              ),
+            ],
+          );
+        });
+  }
+
+  Future<void> showDeleteDialog(String id) async {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Delete'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  ref.child(id).remove().then((value) {
+                    Utils().toastMessgae('Post deleted successfully!');
+                    Navigator.pop(context);
+                  }).onError((error, stackTrace) {
+                    Utils().toastMessgae(error.toString());
+                    Navigator.pop(context);
+                  });
+                },
+                child: const Text('Delete'),
+              ),
+            ],
+          );
+        });
+  }
+
+
 }
