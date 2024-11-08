@@ -12,5 +12,6 @@
         "Sguj",
         "signin",
         "wireframe"
-    ]
+    ],
+    "java.configuration.updateBuildConfiguration": "interactive"
 }

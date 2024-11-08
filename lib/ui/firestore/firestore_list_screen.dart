@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebaseflutter/ui/auth/login_screen.dart';
@@ -50,8 +52,9 @@ class _FireStoreScreenState extends State<FireStoreScreen> {
               stream: fireStore,
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting)
+                if (snapshot.connectionState == ConnectionState.waiting) {
                   return const CircularProgressIndicator();
+                }
 
                 if (snapshot.hasError) return Text(snapshot.error.toString());
 

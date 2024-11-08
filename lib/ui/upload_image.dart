@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 
 import 'package:firebase_database/firebase_database.dart';
@@ -86,16 +88,16 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
                   setState(() {
                     loading = true;
                   });
-                  firebase_storage.Reference ref = firebase_storage
-                      .FirebaseStorage.instance
-                      .ref('/foldername' + '123456');
+                  firebase_storage.Reference ref =
+                      firebase_storage.FirebaseStorage.instance.ref(
+                          '/foldername/${DateTime.now().millisecondsSinceEpoch}');
 
                   firebase_storage.UploadTask uploadTask =
                       ref.putFile(_image!.absolute);
 
-                  await Future.value(uploadTask).then((value) {
+                  await Future.value(uploadTask).then((value) async {
                     // Utils().toastMessgae('Post updated successfully!');
-                    var newUrl = ref.getDownloadURL();
+                    var newUrl = await ref.getDownloadURL();
                     databaseRef.child('1').set({
                       'id': '123456',
                       'title': newUrl.toString(),
