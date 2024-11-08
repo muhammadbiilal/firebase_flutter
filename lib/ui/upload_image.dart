@@ -2,8 +2,11 @@
 
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:firebaseflutter/firebase_services/auth_service.dart';
+import 'package:firebaseflutter/ui/auth/login_screen.dart';
 import 'package:firebaseflutter/utils/utils.dart';
 import 'package:firebaseflutter/widgets/round_button.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +26,7 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
   firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;
   DatabaseReference databaseRef = FirebaseDatabase.instance.ref('Post');
+  final auth = FirebaseAuth.instance;
 
   Future getGalleryImage() async {
     final pickedFile =
@@ -46,15 +50,15 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
           IconButton(
             icon: const Icon(Icons.logout_outlined),
             onPressed: () async {
-              // await AuthService().signOut(context: context);
-              // auth.signOut().then((result) {
-              //   Navigator.push(
-              //       context,
-              //       MaterialPageRoute(
-              //           builder: (context) => const LoginScreen()));
-              // }).onError((error, stackTrace) {
-              //   Utils().toastMessgae(error.toString());
-              // });
+              await AuthService().signOut(context: context);
+              auth.signOut().then((result) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const LoginScreen()));
+              }).onError((error, stackTrace) {
+                Utils().toastMessgae(error.toString());
+              });
             },
           ),
         ],
